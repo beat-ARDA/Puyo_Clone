@@ -1,0 +1,11 @@
+.game-background {
+    height: 100%;
+    width: 100%;
+}
+
+@media (max-width: 375px) {
+    .game-background {
+        height:27%!important;
+        width: 100%;
+    }
+}
