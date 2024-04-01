@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { EvilPearl } from './evilPearl';
+import { useNavigate } from 'react-router-dom';
 
 class World {
     scene;
@@ -14,6 +15,7 @@ class World {
     #arregloMultidimensional = [];
     #clock;
     animacionActiva = true;
+    #gameOver = false;
 
     constructor(container) {
         this.#clock = new THREE.Clock();
@@ -92,114 +94,131 @@ class World {
     }
 
     animate = () => {
+        if (!this.#gameOver) {
+            if (!this.animacionActiva)
+                return
+            let keyFlag = false;
+            let keyFlagCombo = false;
+            let pearlsAdy = [];
+            requestAnimationFrame(this.animate);
+            const delta = this.#clock.getDelta();
+            if (this.#clock.elapsedTime >= 0.5) {
+                // if (this.#pearls.length > 0) {
+                this.#pearls.forEach((e, i) => {
+                    e.tick();
+                    //Evaluarr si todos estan con getKeyFalse    
+                    if (e.getKeyBoardFlag())
+                        keyFlag = true
 
-        if (!this.animacionActiva)
-            return
-        let keyFlag = false;
-        let keyFlagCombo = false;
-        let pearlsAdy = [];
-        requestAnimationFrame(this.animate);
-        const delta = this.#clock.getDelta();
-        if (this.#clock.elapsedTime >= 0.5) {
-            // if (this.#pearls.length > 0) {
-            this.#pearls.forEach((e, i) => {
-                e.tick();
-                //Evaluarr si todos estan con getKeyFalse    
-                if (e.getKeyBoardFlag())
-                    keyFlag = true
-            });
 
-            if (!keyFlag) {
-                //Detectar Combos
-                pearlsAdy = this.#pearls[0].detectCombos();
 
-                if (pearlsAdy.length > 0) {
-                    //Eliminar perlas cuadno tenga adyacentes
-                    for (let i = 0; i < pearlsAdy.length; i++) {
-                        let arrInt = pearlsAdy[i];
-                        for (let k = 0; k < arrInt.length; k++) {
-                            //Eliminar objetos
-                            let evilPearlRemove = this.#arregloMultidimensional[arrInt[k].y][arrInt[k].x].getPearl()
-                            this.scene.remove(evilPearlRemove);
-                            evilPearlRemove.geometry.dispose();
-                            evilPearlRemove.material.dispose();
+                });
 
-                            //Limpiar espacio en el arrglo
-                            this.#arregloMultidimensional[arrInt[k].y][arrInt[k].x] = null;
+                if (!keyFlag) {
+
+                    //Detectar Combos
+                    pearlsAdy = this.#pearls[0].detectCombos();
+
+                    if (pearlsAdy.length > 0) {
+                        //Eliminar perlas cuadno tenga adyacentes
+                        for (let i = 0; i < pearlsAdy.length; i++) {
+                            let arrInt = pearlsAdy[i];
+                            for (let k = 0; k < arrInt.length; k++) {
+                                //Eliminar objetos
+                                let evilPearlRemove = this.#arregloMultidimensional[arrInt[k].y][arrInt[k].x].getPearl()
+                                this.scene.remove(evilPearlRemove);
+                                evilPearlRemove.geometry.dispose();
+                                evilPearlRemove.material.dispose();
+
+                                //Limpiar espacio en el arrglo
+                                this.#arregloMultidimensional[arrInt[k].y][arrInt[k].x] = null;
+                            }
                         }
-                    }
 
-                    while (!keyFlagCombo) {
-                        //Mover las siguientes perlass
-                        for (let i = 18; i > 0; i--) {
-                            for (let j = 0; j < 13; j++) {
-                                let evilPearlRemove = this.#arregloMultidimensional[i][j];
-                                if (evilPearlRemove !== null) {
+                        while (!keyFlagCombo) {
+                            //Mover las siguientes perlass
+                            for (let i = 18; i > 0; i--) {
+                                for (let j = 0; j < 13; j++) {
+                                    let evilPearlRemove = this.#arregloMultidimensional[i][j];
+                                    if (evilPearlRemove !== null) {
 
-                                    evilPearlRemove.setMoveDownAfterCombos(true);
-                                    evilPearlRemove.setKeyBoardFlag(true);
+                                        evilPearlRemove.setMoveDownAfterCombos(true);
+                                        evilPearlRemove.setKeyBoardFlag(true);
 
-                                    let downValue = null;
-                                    if (evilPearlRemove.getRow() < 18) {
-                                        downValue = this.#arregloMultidimensional[i + 1][j];
+                                        let downValue = null;
+                                        if (evilPearlRemove.getRow() < 18) {
+                                            downValue = this.#arregloMultidimensional[i + 1][j];
 
-                                        if (downValue === null) {
-                                            evilPearlRemove.getPearl().position.y -= 0.100;
-                                            let objRefAux1 = this.#arregloMultidimensional[evilPearlRemove.getRow()][evilPearlRemove.getColumn()];
-                                            this.#arregloMultidimensional[evilPearlRemove.getRow()][evilPearlRemove.getColumn()] = null;
-                                            evilPearlRemove.setRow(1);
-                                            this.#arregloMultidimensional[evilPearlRemove.getRow()][evilPearlRemove.getColumn()] = objRefAux1;
+                                            if (downValue === null) {
+                                                evilPearlRemove.getPearl().position.y -= 0.100;
+                                                let objRefAux1 = this.#arregloMultidimensional[evilPearlRemove.getRow()][evilPearlRemove.getColumn()];
+                                                this.#arregloMultidimensional[evilPearlRemove.getRow()][evilPearlRemove.getColumn()] = null;
+                                                evilPearlRemove.setRow(1);
+                                                this.#arregloMultidimensional[evilPearlRemove.getRow()][evilPearlRemove.getColumn()] = objRefAux1;
 
-                                        } else {
+                                            } else {
+                                                evilPearlRemove.setMoveDownAfterCombos(false);
+                                                evilPearlRemove.setKeyBoardFlag(false);
+
+                                            }
+
+                                        }
+                                        else {
                                             evilPearlRemove.setMoveDownAfterCombos(false);
                                             evilPearlRemove.setKeyBoardFlag(false);
 
                                         }
-
-                                    }
-                                    else {
-                                        evilPearlRemove.setMoveDownAfterCombos(false);
-                                        evilPearlRemove.setKeyBoardFlag(false);
-
                                     }
                                 }
                             }
-                        }
 
-                        keyFlagCombo = true;
+                            keyFlagCombo = true;
 
-                        //Comprobar que ya no se mueve nada
-                        for (let i = 0; i < 19; i++) {
-                            for (let k = 0; k < 13; k++) {
-                                let data = this.#arregloMultidimensional[i][k];
-                                if (data !== null)
-                                    if (data.getKeyBoardFlag())
-                                        keyFlagCombo = false;
+                            //Comprobar que ya no se mueve nada
+                            for (let i = 0; i < 19; i++) {
+                                for (let k = 0; k < 13; k++) {
+                                    let data = this.#arregloMultidimensional[i][k];
+                                    if (data !== null)
+                                        if (data.getKeyBoardFlag())
+                                            keyFlagCombo = false;
+                                }
                             }
                         }
+                        //this.animacionActiva = false;
                     }
-                    //this.animacionActiva = false;
+                    else {
+                        // this.animacionActiva = false;
+                        //Obtener valor de arriba de la ultima perla
+                        let UpValue1 = this.#pearls[0].getRow();
+                        let UpValue2 = this.#pearls[1].getRow();
+                        console.log(UpValue1);
+                        console.log(UpValue2);
+                        if (UpValue1 === 1 || UpValue2 === 1) {
+                            this.#gameOver = true;
+                        }
+                        //Generar perlas
+                        const numeroAleatorio1 = Math.floor(Math.random() * 4);
+                        const numeroAleatorio2 = Math.floor(Math.random() * 4);
+                        const evilPearl1 = new EvilPearl(numeroAleatorio1, 1, this.#arregloMultidimensional, true, new THREE.Vector3(0, 0.801, 0), 6, 1);
+                        this.scene.add(evilPearl1.getPearl());
+
+                        this.#arregloMultidimensional[evilPearl1.getRow()][evilPearl1.getColumn()] = evilPearl1;
+
+                        const evilPearl2 = new EvilPearl(numeroAleatorio2, 2, this.#arregloMultidimensional, true, new THREE.Vector3(0, 0.901, 0), 6, 0);
+                        this.scene.add(evilPearl2.getPearl());
+
+                        this.#arregloMultidimensional[evilPearl2.getRow()][evilPearl2.getColumn()] = evilPearl2;
+                        this.#pearls = [];
+                        this.#pearls.push(evilPearl1);
+                        this.#pearls.push(evilPearl2);
+                    }
                 }
-                else {
-                    //Generar perlas
-                    const numeroAleatorio1 = Math.floor(Math.random() * 4);
-                    const numeroAleatorio2 = Math.floor(Math.random() * 4);
-                    const evilPearl1 = new EvilPearl(numeroAleatorio1, 1, this.#arregloMultidimensional, true, new THREE.Vector3(0, 0.801, 0), 6, 1);
-                    this.scene.add(evilPearl1.getPearl());
-
-                    this.#arregloMultidimensional[evilPearl1.getRow()][evilPearl1.getColumn()] = evilPearl1;
-
-                    const evilPearl2 = new EvilPearl(numeroAleatorio2, 2, this.#arregloMultidimensional, true, new THREE.Vector3(0, 0.901, 0), 6, 0);
-                    this.scene.add(evilPearl2.getPearl());
-
-                    this.#arregloMultidimensional[evilPearl2.getRow()][evilPearl2.getColumn()] = evilPearl2;
-
-                    this.#pearls.push(evilPearl1);
-                    this.#pearls.push(evilPearl2);
-                }
+                this.#clock.start();
             }
-            this.#clock.start();
         }
+        else {
+            window.location.href = '/';
+        } 
 
         this.renderer.render(this.scene, this.camera);
 
