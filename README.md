@@ -1,5 +1,13 @@
 
-Clon de Puyo Puyo, los controles para moverte son a,w,s,d, para cambiar de posicion las perlas se utiliza las flechas izquierda y derecha
+Clon de Puyo Puyo, los controles para moverte son :
+
+A -> Izquierda
+D -> Derecha
+S -> Abajo
+W -> Arriba
+
+Flecha Izq -> girar perla
+Flecha Der -> Girar perla
 
 
 # Getting Started with Create React App
