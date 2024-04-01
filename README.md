@@ -1,5 +1,5 @@
 
-Clon de Puyo Puyo, los controles para moverte son :
+Clon de Puyo Puyo, Solamente se jugable con teclado de computadora, los controles para moverte son :
 
 A -> Izquierda
 D -> Derecha
