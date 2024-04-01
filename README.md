@@ -1,3 +1,7 @@
+
+Clon de Puyo Puyo, los controles para moverte son a,w,s,d, para cambiar de posicion las perlas se utiliza las flechas izquierda y derecha
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
