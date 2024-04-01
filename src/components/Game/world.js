@@ -41,6 +41,9 @@ class World {
         this.camera = new THREE.OrthographicCamera(-aspectRatio * zoomFactor, aspectRatio * zoomFactor, 1 * zoomFactor, -1 * zoomFactor, near, far);
         this.renderer.setSize(width, height);
         this.camera.position.z = 1;
+        // this.camera.aspect = window.innerWidth / window.innerHeight;
+        // this.camera.updateProjectionMatrix();
+        // this.renderer.setSize(window.innerWidth, window.innerHeight);
 
         const evilPearl1 = new EvilPearl(2, 1, this.#arregloMultidimensional, true, new THREE.Vector3(0, 0.801, 0), 6, 1);
         this.scene.add(evilPearl1.getPearl());
@@ -89,6 +92,7 @@ class World {
     }
 
     animate = () => {
+
         if (!this.animacionActiva)
             return
         let keyFlag = false;
@@ -194,12 +198,11 @@ class World {
                     this.#pearls.push(evilPearl2);
                 }
             }
-
             this.#clock.start();
-            // }
         }
 
         this.renderer.render(this.scene, this.camera);
+
     }
 
     start() {

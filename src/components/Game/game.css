@@ -3,9 +3,9 @@
     width: 100%;
 }
 
-@media (max-width: 375px) {
+@media (max-width: 1024px) {
     .game-background {
-        height:27%!important;
+        height: 50% !important;
         width: 100%;
     }
 }
