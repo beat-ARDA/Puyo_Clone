@@ -1,3 +1,15 @@
+
+Clon de Puyo Puyo, Solamente se jugable con teclado de computadora, los controles para moverte son :
+
+A -> Izquierda
+D -> Derecha
+S -> Abajo
+W -> Arriba
+
+Flecha Izq -> girar perla
+Flecha Der -> Girar perla
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
