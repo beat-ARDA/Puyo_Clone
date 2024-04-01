@@ -6,7 +6,12 @@ export default function Home() {
 
     return (
         <div className="d-flex flex-column justify-content-center align-items-center container_home bg-success">
-            <h1 className='mb-4'>Puyo - Puyo</h1>
+            <h1 className='mb-4 text-center'>
+                Puyo - Puyo
+                Usa las teclas A,W,S,D para moverte
+                Usa las teclas flecha izq y der para girar las perlas
+            </h1>
+
             <button
                 onClick={() => navigate('game')}
                 className="btn btn-secondary w-25"
